@@ -13,22 +13,28 @@ function App() {
 
 	const loadMovies = () => filteredMovies.map(movie => <Movie title={movie.title} />)
 
-	// const searchGenre = () => movies.filter(movie => movie.genre === selectedGenre)
- 	// const searchMovies = () => movies.filter(movie => movie.title === search.trim())
+	//TODO: add keys and/or ids by using a unique state
 
+	const filterByGenre = (movies, genre) => {
+		return genre === "all" ? movies : movies.filter(movie => movie.genre === genre);
+	};
+
+	// Cool ternary idea, not the best for intuitive code
+	const filterBySearch = (movies, searchTerm) => {
+		const cleanSearch = searchTerm.trim().toLowerCase();
+		return searchTerm ? movies.filter(movie => movie.title.trim().toLowerCase().includes(cleanSearch)) : movies;
+	}; 
+	
+	// basically passes the result and what I wanna do to every function and returns 
+	// the original array if action is unnecessary, pretty roundabout logic but ends
+	// up with a clean useEffect
 	useEffect(() => {
-		let selectedMovies;
+		let result = movies;
+		result = filterByGenre(result, selectedGenre);
+		result = filterBySearch(result, search);
+		setFilteredMovies(result);
 
-		if (search !== "" && genre !== "all") {
-			selectedMovies = movies.filter((m) => { m.title.trim().toLowerCase() === search.trim().toLowerCase(); });
-		}
-		else if (search !== "") {
-			selectedMovies = movies.filter((m) => { m.title.trim().toLowerCase() === search.trim().toLowerCase(); });
-			setFilteredMovies(selectedMovies);
-		} else {
-			setFilteredMovies(movies);
-		}
-	}, [search, movies]);
+	}, [search, movies, selectedGenre]);
 
 	const addMovie = e => {
 		e.preventDefault();
