@@ -9,17 +9,26 @@ function App() {
 	const [search, setSearch] = useState("")
 	const [genre, setGenre] = useState("")
 	const [title, setTitle] = useState("")
-	const [filteredMovies, setFilteredMovies] = useState(Movies)
+	const [filteredMovies, setFilteredMovies] = useState(movies)
 
 	const loadMovies = () => filteredMovies.map(movie => <Movie title={movie.title} />)
-	const loadFiltered = () => movies.filter(movie => movie.genre === selectedGenre).map(movie => <Movie title={movie.title} />)
-	const searchMovies = () => movies.filter(movie => movie.title === search.trim().toLowerCase())
+
+	// const searchGenre = () => movies.filter(movie => movie.genre === selectedGenre)
+ 	// const searchMovies = () => movies.filter(movie => movie.title === search.trim())
 
 	useEffect(() => {
-		console.log("running")
-		
-		setFilteredMovies(searchMovies())
-	}, [search]);
+		let selectedMovies;
+
+		if (search !== "" && genre !== "all") {
+			selectedMovies = movies.filter((m) => { m.title.trim().toLowerCase() === search.trim().toLowerCase(); });
+		}
+		else if (search !== "") {
+			selectedMovies = movies.filter((m) => { m.title.trim().toLowerCase() === search.trim().toLowerCase(); });
+			setFilteredMovies(selectedMovies);
+		} else {
+			setFilteredMovies(movies);
+		}
+	}, [search, movies]);
 
 	const addMovie = e => {
 		e.preventDefault();
